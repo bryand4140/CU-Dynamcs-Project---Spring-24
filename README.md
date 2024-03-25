@@ -1,1 +1,1 @@
-# CU-Dynamcs-Project---Spring-24
+# CU-Dynamcs-Project - Spring-24
