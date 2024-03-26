@@ -12,7 +12,7 @@ E     = 227.0e9; %Approx. Young's modulus for carbon fiber in tension, [N/m^2]
 A = t*c;     %Length averaged cross sectional area, [m^2]
 V = t*c*l;   %Approximate blade volume, [m^3]
 S = l*c;     %Blade planform area, [m^2]
-m = rho*V;   %Mass of a single blade, [kg]
+m = rho_b*V;   %Mass of a single blade, [kg]
 k_t = E*A/l; %Spring constant for a single blade, [N/m]
 
 
