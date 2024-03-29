@@ -1,46 +1,60 @@
 %CU Spring 2024 Aerospace Dynamics Project
 clear;close all; clc
 
-%Rotor Params
-m_r = 1; %Mass of Rotor (kg)
-k_r = 1; %Spring Constant of Rotor
+%==========================================================================
+%                        ** OPERATIONAL PARMS. ** 
+%Blade Params.
+m_b = 6.4006;     %Mass of Blade (kg)
+k_b = 293.0275e6; %Spring Constant of Blade (Nm)
+n   = 16;         %Number of Blades
+i   = 1:n;        %Individual Blade Designation
 
-%Blade Params
-m_b = 1; %Mass of Blade (kg)
-k_b = 1; %Spring Constant of Blade
+%Engine Parms.
+omega = 262.85;            %Engine Rotational Speed (rad/s)
+RPM   = omega*60 / (2*pi); %RPM of engine fan, (rev/min)
 
-n = 12; %Number of Blades
-i = 1:n; %Individual Blade Designation
+%External Force Parms.
+g   = 9.81;                       %Acceleration due to gravity (m/s^2)
+D_b = Blade_Drag(RPM, 0.54879); %Drag force on an individual blade, N
 
-%External Forces Params
-omega = 200; %Rotational Speed (rad/s)
-g = 9.81; %Acceleration due to gravity (m/s^2)
-D_b = 15; %Drag Force (N)
+%Blade Defect Params
+d_b = 12; %Defect Blade Number
+blade_defect_percent = 1.0;
 
-%Alternative Eye Matrix
-alt_eye = zeros(2*n);
-for e = 1:size(alt_eye,1) 
-    if mod(e,2) == 1 
-        alt_eye(e,e) = 1;
-    end
-end
 
-%Alternative One Matrix
-alt_ones = zeros(2*n,1);
-for e = 1:size(alt_ones,1) 
-    if mod(e,2) == 0 
-        alt_ones(e,1) = 1;
-    end
-end
+%==========================================================================
+%                       ** MATRIX ASSEMBLY ** 
+M_blade              = (m_b)*eye(2*n);
+M_blade(d_b,d_b)     = M_blade(d_b,d_b)*blade_defect_percent;
+M_blade(n+d_b,n+d_b) = M_blade(n+d_b,n+d_b)*blade_defect_percent;
+
+K_blade = k_b*[eye(n) zeros(n);zeros(n) zeros(n)];
+
+F_blade = D_b*[zeros(n,1);ones(n,1)];
+F_blade(n+d_b,1) = F_blade(n+d_b,1)*(blade_defect_percent^4);
 
 %Mass Matrix
-M = [(m_r+n*m_b)*eye(2) m_b*[cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];m_b*[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] (m_b)*eye(2*n)];
+M = [0.5*trace(M_blade)*eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)]*M_blade;M_blade*[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] M_blade];
 
-%Spring Matrix
-K_spring = [(k_r)*eye(2) zeros(2,2*n);zeros(2*n,2) k_b*alt_eye];
-K_centripetal = -M*omega^2;
+%Stiffness Matrix
+K_spring = [trace(K_blade)*eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)]*K_blade;K_blade*[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] K_blade];
+K_centripetal = (omega^2)*M;
 K = K_spring+K_centripetal;
 
-%External Force
-F_g = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*g*[m_r*[0 -1]';m_b*[-sin((2*pi*(i-1))/n) -cos((2*pi*(i-1))/n)]'];
-F_aero = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[[0 0]';D_b*alt_ones];
+%Force Matrix
+F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
+
+
+%==========================================================================
+%                         ** ANALYSIS ** 
+[EVec, Eval, NatFreq, mu, gamma] = MDOF_Analysis(M,K);
+
+NatFreq
+
+
+
+
+
+
+
+

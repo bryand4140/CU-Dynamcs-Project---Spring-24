@@ -17,25 +17,25 @@ mu      = A nx1 column vector whose elements are the normalized modal
 gamma   = A nx1 column vector whose elements are normalized the model 
           stiffnesses.
 %}
-
-
-%Calculate the Eigenvectors:
-[EVec, D] = eig(K, M);
-
-%Calculate the eigenvalues and natural frequencies
-Eval    = diag(D);
-NatFreq = sqrt(Eval); %Rad/s
-
-%Calculate the geeralized mass and stiffness values:
-n = size(EVec,1); %Determine the size of the system (number of DOF)
-
-%Preallocate:
-mu    = zeros(n,1);
-gamma = zeros(n,1);
-
-for i = 1:n
-    mu(i)    = transpose(EVec(:,i))*M*EVec(:,i);
-    gamma(i) = transpose(EVec(:,i))*K*EVec(:,i);
-end
+    
+    
+    %Calculate the Eigenvectors:
+    [EVec, D] = eig(K, M);
+    
+    %Calculate the eigenvalues and natural frequencies
+    Eval    = diag(D);
+    NatFreq = sqrt(Eval); %Rad/s
+    
+    %Calculate the geeralized mass and stiffness values:
+    n = size(EVec,1); %Determine the size of the system (number of DOF)
+    
+    %Preallocate:
+    mu    = zeros(n,1);
+    gamma = zeros(n,1);
+    
+    for i = 1:n
+        mu(i)    = transpose(EVec(:,i))*M*EVec(:,i);
+        gamma(i) = transpose(EVec(:,i))*K*EVec(:,i);
+    end
 
 end %End of MDOF_Analysis 
