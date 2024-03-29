@@ -5,7 +5,7 @@ clear;close all; clc
 %                        ** OPERATIONAL PARMS. ** 
 %Blade Params.
 m_b = 6.4006;     %Mass of Blade (kg)
-k_b = 293.0275e6; %Spring Constant of Blade (Nm)
+k_b = 0;          %Spring Constant of Blade (Nm)
 n   = 16;         %Number of Blades
 i   = 1:n;        %Individual Blade Designation
 
@@ -44,12 +44,9 @@ K = K_spring+K_centripetal;
 %Force Matrix
 F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
 
-
 %==========================================================================
 %                         ** ANALYSIS ** 
 [EVec, Eval, NatFreq, mu, gamma] = MDOF_Analysis(M,K);
-
-NatFreq
 
 
 
