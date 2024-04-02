@@ -83,6 +83,7 @@ while true
     end
 end
 
+
 %Duhamels-s Integral
 while true
     P_s = [S(1)*sin(omega*duhamels_s.time(end));S(2)*sin(omega*duhamels_s.time(end))];
@@ -99,6 +100,7 @@ while true
         break;
     end
 end
+
 
 q_duhamels = duhamels_r.nu'*X_r_calc' + duhamels_s.nu'*X_s_calc';
 
