@@ -21,7 +21,7 @@ L_b = 700; %Force (N)
 
 % Blade Defect Params
 d_b = 1; % Defect Blade Number
-blade_work_percent = 1;
+blade_work_percent = 0.5;
 
 M_blade = (m_b)*eye(2*n);
 M_blade(d_b,d_b) = M_blade(d_b,d_b)*blade_work_percent;
@@ -39,8 +39,9 @@ M = [0.5*trace(M_blade)*eye(2)+m_r*eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))
 
 %Stiffness Matrix
 K_centripetal = -(omega^2)*M;
-K_spring = [k_r*eye(2) zeros(2,2*n);zeros(2*n,2) K_blade];
-K = K_spring + K_centripetal;
+K_spring = [0.5*trace(K_blade)*eye(2)+k_r*eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)]*K_blade;K_blade*[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] K_blade];
+%K_spring = [k_r*eye(2) zeros(2,2*n);zeros(2*n,2) K_blade];
+K = K_spring+K_centripetal;
 
 %Force Matrix
 F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
@@ -52,7 +53,7 @@ t = linspace(0,t_end,t_end/del_t);
 
 [V,E]= eig(K,M);
 
-sol = zeros(size(t,2)+1,2*n+2);
+sol = zeros(size(t,2)+1,2*n+2)
 
 for i = 1:2*n+2
     duhamels_soln = duhamels(V(:,i),V(:,i)'*M*V(:,i),F,omega,sqrt(E(i,i)),t);
