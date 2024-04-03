@@ -10,7 +10,7 @@ format shorteng
 mb  = 6.4005;  %Mass of a single blade, [kg]
 me  = 5.3e3;   %Mass of the engine, [kg]
 kx  = 500;     %Spring constant for the engine (x-dir), [N/m]
-ky  = 500;     %Spring constant for the engine (y-dir), [N/m]
+ky  = 1e;     %Spring constant for the engine (y-dir), [N/m]
 w   = 250.0;   %Rotational speed of the rotor, [rad/s]
 rho = 0.01841; %Air density, [kg/m^3]
 nb  = 8;       %Number of blades
@@ -77,14 +77,12 @@ figure('Color','white')
 subplot(2,1,1)
 plot(tspan,xp*1e3,'b','LineWidth',1.5)
 xlabel('Time, s')
-ylabel('Response Amplitude., mm')
-title('x-Direction')
+ylabel('x Response Amp., mm')
 
 subplot(2,1,2)
 plot(tspan,xp*1e3,'r','LineWidth',1.5)
 xlabel('Time, s')
-ylabel('Response Amplitude, mm')
-title('y-Direction')
+ylabel('y Response Amp, mm')
 
 function [Response] = calculateResponse(M, K, tspan, x0, v0, Fx, Fy, w)
     % This function calculates the dynamic response of a turbofan engine
