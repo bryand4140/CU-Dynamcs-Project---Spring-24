@@ -11,10 +11,10 @@ OUTPUTS
     %Blade Geometry and Properties:
     c  = 4*(1/12)*(1/3.28); %Length averaged chord, [m]
     l  = 0.925*(3.4044/2);  %Blade length corrected for hub radius, [m]
-    CD = 0.1;               %Assumed Drag Coefficient
+    CD = 1.0;               %Assumed Drag Coefficient
     
     %Engine Parms.
-    omega = rpm_2_rads(RPM);
+    omega = RPM*2*pi/60;
     
     %Calculations
     S = l*c;     %Blade planform area, [m^2]

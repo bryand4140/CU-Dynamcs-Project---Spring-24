@@ -2,20 +2,26 @@
 clear;close all; clc
 
 %Rotor Params
-m_r = 1; %Mass of Rotor (kg)
+m_r = 3000; %Mass of Rotor (kg)
 k_r = 1; %Spring Constant of Rotor
 
 %Blade Params
-m_b = 1; %Mass of Blade (kg)
+m_b = 6.4005; %Mass of Blade (kg)
 k_b = 1; %Spring Constant of Blade
 
 n = 12; %Number of Blades
 i = 1:n; %Individual Blade Designation
 
 %External Forces Params
-omega = 200; %Rotational Speed (rad/s)
-g = 9.81; %Acceleration due to gravity (m/s^2)
-D_b = 15; %Drag Force (N)
+omega = 262.85; %Rotational Speed (rad/s)
+RPM   = omega*60/(2*pi);
+g     = 9.81; %Acceleration due to gravity (m/s^2)
+rho   = 4.3161e-1; %Density at 10e3 m, (kg/m^3)
+t     = 0.02;
+L     = 1.5745;
+CD    = 0.1;
+
+D_b = Blade_Drag(RPM,1.0);
 
 %Alternative Eye Matrix
 alt_eye = zeros(2*n);
