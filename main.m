@@ -1,5 +1,11 @@
 clc; clear;
 
+%==========================================================================
+% ** CONTROLS **
+show_plots = false;
+
+%==========================================================================
+
 %Blade Params
 m_b = 6; %Mass of Blade (kg)
 len = 1.5; %Length of Blade (m)
@@ -46,6 +52,10 @@ K = K_spring+K_centripetal;
 %Force Matrix
 F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
 
+%--------------------------------------------------------------------------
+[EVec, Eval, NatFreq, mu, gamma] = MDOF_Analysis(M,K);
+%--------------------------------------------------------------------------
+
 %Time Params
 t_end = 10;
 del_t = 0.1;
@@ -53,7 +63,7 @@ t = linspace(0,t_end,t_end/del_t);
 
 [V,E]= eig(K,M);
 
-sol = zeros(size(t,2)+1,2*n+2)
+sol = zeros(size(t,2)+1,2*n+2);
 
 for i = 1:2*n+2
     duhamels_soln = duhamels(V(:,i),V(:,i)'*M*V(:,i),F,omega,sqrt(E(i,i)),t);
@@ -62,14 +72,15 @@ end
 
 sol = sol(1:end-1,:);
 
-%%Plot
-plot(t,sol(:,1),'r',t,sol(:,2),'k',LineWidth=2);
-legend('x_r','y_r');
-xlim([0 t_end]);
-%ylim([-0.05 0.05]);
-xlabel('Time (s)');
-ylabel('Amplitude (m)');
-title(['Response on Rotor with Defect Blade Mass Loss of ' num2str(1 - blade_work_percent),'%']);
+if show_plots
+    plot(t,sol(:,1),'r',t,sol(:,2),'k',LineWidth=2);
+    legend('x_r','y_r');
+    xlim([0 t_end]);
+    %ylim([-0.05 0.05]);
+    xlabel('Time (s)');
+    ylabel('Amplitude (m)');
+    title(['Response on Rotor with Defect Blade Mass Loss of ' num2str(1 - blade_work_percent),'%']);
+    end
 
 function duhamels = duhamels(X,mu,F,omega,omega_calc,t)
 
