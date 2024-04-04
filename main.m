@@ -7,8 +7,8 @@ show_plots = false;
 %==========================================================================
 
 %Blade Params
-m_b = 6; %Mass of Blade (kg)
-len = 1.5; %Length of Blade (m)
+m_b = 6.4005; %Mass of Blade (kg)
+len = 1.5745; %Length of Blade (m)
 k_b = 298*(10^6); %Spring Constant of Blade (Nm)
 
 %Rotor Params
