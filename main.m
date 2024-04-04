@@ -1,8 +1,8 @@
-clc; clear;
+clc; clear; close all;
 
 %==========================================================================
 %                             ** CONTROLS **
-show_plots = false;
+show_plots = true;
 
 %==========================================================================
 
@@ -13,7 +13,7 @@ k_b = 298*(10^6); %Spring Constant of Blade (Nm)
 
 %Rotor Params
 m_r = 3500; %Mass of Rotor (kg)
-k_r = 300*(10^6); %Spring Constant of Rotor (Nm)
+k_r = 96*(10^9); %Spring Constant of Rotor (Nm)
 
 n = 16; %Number of Blades
 i = 1:n; %Individual Blade Designation
@@ -55,7 +55,15 @@ K = K_spring+K_centripetal;
 F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
 
 %--------------------------------------------------------------------------
+%DELETE THIS LATER (USED JUST FOR PP INFO)
 [EVec, Eval, NatFreq, ~, ~] = MDOF_Analysis(M,K);
+
+v1 = EVec(:,1);
+v2 = EVec(:,2);
+
+wx = NatFreq(1);
+wy = NatFreq(2);
+
 %--------------------------------------------------------------------------
 
 %Time Params
@@ -75,13 +83,20 @@ end
 sol = sol(1:end-1,:);
 
 if show_plots
-    plot(t,sol(:,1),'r',t,sol(:,2),'k',LineWidth=2);
-    legend('x_r','y_r');
-    xlim([0 t_end]);
-    %ylim([-0.05 0.05]);
-    xlabel('Time (s)');
-    ylabel('Amplitude (m)');
+    figure('Color','white')
     title(['Response on Rotor with Defect Blade Mass Loss of ' num2str(1 - blade_work_percent),'%']);
+    subplot(1,2,1)
+    plot(t,sol(:,1)*1e3,'r','linewidth',2)
+    xlabel('Time (s)');
+    ylabel('x Amplitude (mm)');
+    
+    subplot(1,2,2)
+    plot(t,sol(:,2)*1e3,'k',LineWidth=2);
+    xlim([0 t_end]);
+    xlabel('Time, s')
+    ylabel('y-Amplitude, mm')
+    %ylim([-0.05 0.05]);
+    
 end
 
 function duhamels = duhamels(X,mu,F,omega,omega_calc,t)
