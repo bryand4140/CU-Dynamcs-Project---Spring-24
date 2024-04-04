@@ -80,7 +80,7 @@ if show_plots
     xlabel('Time (s)');
     ylabel('Amplitude (m)');
     title(['Response on Rotor with Defect Blade Mass Loss of ' num2str(1 - blade_work_percent),'%']);
-    end
+end
 
 function duhamels = duhamels(X,mu,F,omega,omega_calc,t)
 
