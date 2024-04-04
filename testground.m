@@ -30,14 +30,13 @@ v0 = [0;0]; %Initial xdot and ydot velocities
 %Perform Eign Analysis
 [EVec, Eval, NatFreq, mu, gamma] = MDOF_Analysis(M,K);
 
-
 %Create arrays for the position angles, mass of the blades,and length:
 theta_blade = (2*pi/nb)*(180/pi)*(0:1:nb);
 m_blades    = mb * ones(1,nb);
 L_blades    = L  * ones(1,nb);
 
 %Modify Blade 4:
-%Reduce mass and length by 25%
+%Reduce mass and length by 25% to simulate failure
 m_blades(4) = mb*0.75;
 L_blades(4) = L*0.75;
 
@@ -59,8 +58,8 @@ for i = 1:nb
 end
 
 %Extract elements and sum in x and y direction:
-Fx = sum(F_ext_blades(1,:));
-Fy = sum(F_ext_blades(2,:));
+Fx = sum(F_ext_blades(1,:)); %Total force in x-direction, [N]
+Fy = sum(F_ext_blades(2,:)); %Total force in y-direction, [N]
 
 %Define the total time span
 tspan = 0:0.1:20;
