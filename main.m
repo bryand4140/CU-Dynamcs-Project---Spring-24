@@ -1,7 +1,7 @@
 clc; clear;
 
 %==========================================================================
-% ** CONTROLS **
+%                             ** CONTROLS **
 show_plots = false;
 
 %==========================================================================
@@ -29,6 +29,8 @@ L_b = 700; %Force (N)
 d_b = 1; % Defect Blade Number
 blade_work_percent = 0.5;
 
+%--------------------------------------------------------------------------
+%Calculations:
 M_blade = (m_b)*eye(2*n);
 M_blade(d_b,d_b) = M_blade(d_b,d_b)*blade_work_percent;
 M_blade(n+d_b,n+d_b) = M_blade(n+d_b,n+d_b)*blade_work_percent;
@@ -53,7 +55,7 @@ K = K_spring+K_centripetal;
 F = [eye(2) [cos((2*pi*(i-1))/n) -sin((2*pi*(i-1))/n);sin((2*pi*(i-1))/n) cos((2*pi*(i-1))/n)];[cos((2*pi*(i-1))/n)' sin((2*pi*(i-1))/n)';-sin((2*pi*(i-1))/n)' cos((2*pi*(i-1))/n)'] eye(2*n)]*[zeros(2,1);F_blade];
 
 %--------------------------------------------------------------------------
-[EVec, Eval, NatFreq, mu, gamma] = MDOF_Analysis(M,K);
+[EVec, Eval, NatFreq, ~, ~] = MDOF_Analysis(M,K);
 %--------------------------------------------------------------------------
 
 %Time Params
