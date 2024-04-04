@@ -13,7 +13,7 @@ k_b = 298*(10^6); %Spring Constant of Blade (Nm)
 
 %Rotor Params
 m_r = 3500; %Mass of Rotor (kg)
-k_r = 96*(10^9); %Spring Constant of Rotor (Nm)
+k_r = 300*(10^6); %Spring Constant of Rotor (Nm)
 
 n = 16; %Number of Blades
 i = 1:n; %Individual Blade Designation
